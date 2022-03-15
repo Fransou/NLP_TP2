@@ -31,20 +31,24 @@ Here is the structure of our code.
 
 Our data features will be the concatenation of
 
-- Tokenized sentences thanks to `BertTokenizer` from pretrained `bert-base-cased`, with a maximum sentence length of 64 caracters. This length was chosen by test-and-trial. We end up with 3 vectors : `input_ids`, `attention_mask` and ``aspect_id``.
+- Tokenized sentences thanks to `BertTokenizer` from pretrained `bert-base-cased`, with a maximum sentence length of 64 caracters. This length was chosen by test-and-trial. We end up with 3 vectors : `input_ids`, `attention_mask` and ``aspect_id`` (telling which aspect are we evaluating for a given sentece).
 - A vector corresponding to a mask of the tokenized aspect term.
 
-Our labels will be a matrix of shape $12 \times 3$, corresponding to the 12 aspect categories and the 3 polarities. It is a sparse vector, with 1 in the aspect category index with the corresponding polarity. By doing this, even if a sentence contains sentiments about multiple aspects, we do only one prediction per aspect.
+Our model will output 3 scores corresponding to the probability of the Text being 'positive', 'negative', or 'neutral' for a given aspect.
 
 ### Model architecture
 
-We use `BertModel` from pretrained `bert-base-cased` and we concatenate 6 fully connected layers of shape $1024\times1024$ with ReLU activation function, each one separated by a Drop Out layer with probabilities decreasing from $0.5$ to $0.3$. We also use two-by-two skipping layers. The last layer is a fully connected layer of size $12\times3$ with softmax.
+We use `BertModel` from pretrained `bert-base-cased` and we concatenate 6 fully connected layers of shape $1024\times1024$ with ReLU activation function, each one separated by a Drop Out layer with probabilities decreasing from $0.5$ to $0.3$. We also use two-by-two skipping layers. 
 
-We use Drop Out because we noticed some overfitting, and skip connection in order for the model to learn.
+The last layer is a fully connected layer of size $12\times3$, which gives the model's polarity predictions for every aspect. We then return the polarity predictions for the aspect we are looking for. The crossentropy loss is computed only on those three scores (polarity score for our aspect). 
+
+We tried to perform data augmentation by adding for each text a neutral polarity for aspects that are not labeled for this text (to compute the loss on more neurons in the last layer for each text) but this did'nt improve the results.
+
+We use Drop Out because we noticed some overfitting, and skip connection (the intuition beeing that it would facilitate the use of deep models, keeping a gradient not too low to update the weights of the BERT model).
 
 ### Training
 
-We set our learning rate to $10^{-5}$, otherwise the model converges within one epoch and stops learning. We put $ 100$ epochs, but the model is learning slower and slower, so we could have stopped the training earlier.
+We set our learning rate to $10^{-5}$, otherwise the model converges within one epoch and stops learning. We put $ 100$ epochs, but the model is learning slower and slower, so we could have stopped the training earlier. We also used a linear learning rate schedule.
 
 ### Evaluation and results
 
