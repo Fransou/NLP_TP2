@@ -19,12 +19,12 @@ Here is the structure of our code.
 │   
 ├───resources  
 └───src
-        classifier.py		# define the classifier
-        config.py		# define global variables and device
-        create_dataset.py	# create dataloader for training and testing
-        model.py		# define the model's architecture
-        preprocessing.py	# preprocess data
-        tester.py		# run the code and evaluate model
+        classifier.py           # define the classifier
+        config.py               # define global variables and device
+        create_dataset.py       # create dataloader for training and testing
+        model.py                # define the model's architecture
+        preprocessing.py        # preprocess data
+        tester.py               # run the code and evaluate model
 ```
 
 ### Data Preprocessing
@@ -48,8 +48,8 @@ We use Drop Out because we noticed some overfitting, and skip connection (the in
 
 ### Training
 
-We set our learning rate to $10^{-5}$, otherwise the model converges within one epoch and stops learning. We put $ 100$ epochs, but the model is learning slower and slower, so we could have stopped the training earlier. We also used a linear learning rate schedule.
+We set our learning rate to $10^{-5}$, otherwise the model converges within one epoch and stops learning. We put $50$ epochs, but the model is learning slower and slower, so we could have stopped the training earlier. We also used a linear learning rate schedule.
 
 ### Evaluation and results
 
-We reach an accuracy of $87\%$ on the training set, and $84\%$ on the test set. We see that there are very few neutral polarity predicted.
+We reach an accuracy of $90\%$ on the training set, and $83\%$ on the test set. We see that there are very few neutral polarity predicted.
