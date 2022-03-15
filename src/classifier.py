@@ -17,7 +17,7 @@ class Classifier:
     """The Classifier"""
 
     #############################################
-    def train(self, trainfile, devfile=None, lr = 1e-5, num_epochs = 10):
+    def train(self, trainfile, devfile=None, lr = 1e-5, num_epochs = 3):
         """
         Trains the classifier model on the training set stored in file trainfile
         WARNING: DO NOT USE THE DEV DATA AS TRAINING EXAMPLES, YOU CAN USE THEM ONLY FOR THE OPTIMIZATION
@@ -116,18 +116,13 @@ class Classifier:
         Returns the list of predicted labels
         """
         y_pred = []
-        y_true = []
 
         data_loader_test = create_data_loader(datafile, train=False)
         for batch in data_loader_test:
-            labels = batch['label'].to(torch.int64)
-            labels = labels.to(device)
-            asp_id = batch['aspect_id']
             batch = {k: v.to(device) for k, v in batch.items() if k != 'label'}
-
             outputs = list(self.model(**batch).argmax(dim=1).cpu().numpy())
             y_pred = y_pred + outputs
-            y_true = y_true + list(labels.cpu().numpy())
-
-        print(f'Accuracy on test set: {int(np.mean(np.array(y_true) == np.array(y_pred))*100)}%')
-        return y_pred
+        
+        polarity = ["positive", "negative", "neutral"]
+        polarity_out = [polarity[i] for i in y_pred]
+        return polarity_out
