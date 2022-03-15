@@ -47,10 +47,10 @@ class Classifier:
         loss_hist_test = []
         acc_hist_test = []
         best_test_acc = 0
-
+        progress_bar = tqdm(range(num_epochs*len(data_loader_train)))
+        
         for epoch in range(num_epochs):
             print(f"Running epoch : {epoch}/{num_epochs}")
-            progress_bar = tqdm(range(len(data_loader_train)))
             for batch in data_loader_train:
                 labels = batch['label'].to(torch.int64)
                 labels = labels.to(device)
