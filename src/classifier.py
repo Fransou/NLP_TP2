@@ -17,7 +17,7 @@ class Classifier:
     """The Classifier"""
 
     #############################################
-    def train(self, trainfile, devfile=None, lr = 1e-5, num_epochs = 100):
+    def train(self, trainfile, devfile=None, lr = 1e-5, num_epochs = 10):
         """
         Trains the classifier model on the training set stored in file trainfile
         WARNING: DO NOT USE THE DEV DATA AS TRAINING EXAMPLES, YOU CAN USE THEM ONLY FOR THE OPTIMIZATION
